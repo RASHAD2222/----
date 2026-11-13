@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Valorant Crosshair Studio | ستوديو ومولد كروس هير فالورانت</title>
+  <meta name="description" content="برنامج متكامل لتصميم ومعاينة وتوليد أكواد كروس هير لعبة فالورانت مع مكتبة احترافية جاهزة للأشكال والمحترفين.">
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Fira+Code:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Top Navigation Header -->
+  <header class="app-header">
+    <div class="brand">
+      <div class="brand-icon">V</div>
+      <div class="brand-text">
+        <h1>
+          ستوديو كروس هير فالورانت
+          <span class="brand-badge">PRO v2.0</span>
+        </h1>
+        <p>مصمم تفاعلي ومولد أكواد مباشر مع مكتبة جاهزة ومحاكاة ارتداد الأسلحة</p>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <button id="importCodeBtn" class="btn btn-secondary" title="استيراد كود من اللعبة">
+        📥 استيراد كود
+      </button>
+      <button id="resetBtn" class="btn btn-secondary" title="إعادة ضبط للإعدادات الافتراضية">
+        🔄 ضبط افتراضي
+      </button>
+      <button id="soundToggleBtn" class="icon-btn active" title="صوت إطلاق النار">
+        🔊
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Application Body -->
+  <main class="main-layout">
+
+    <!-- LEFT COLUMN: Canvas Preview & Code Output -->
+    <section class="preview-column">
+
+      <!-- Canvas Preview Card -->
+      <div class="preview-card">
+        <div class="preview-header">
+          <div class="preview-title">
+            <span>🎯</span> معاينة الكروس هير الحية
+          </div>
+          <!-- Zoom Factor Buttons -->
+          <div class="zoom-controls">
+            <button class="zoom-btn" data-zoom="1">1x</button>
+            <button class="zoom-btn active" data-zoom="2">2x</button>
+            <button class="zoom-btn" data-zoom="4">4x</button>
+            <button class="zoom-btn" data-zoom="8">8x</button>
+          </div>
+        </div>
+
+        <!-- Canvas Container -->
+        <div class="canvas-wrapper">
+          <canvas id="crosshairCanvas" width="512" height="512"></canvas>
+          <div class="canvas-hint">انقر بالفأرة أو اضغط المسافة (Space) لاختبار إطلاق النار والارتداد</div>
+        </div>
+
+        <!-- Background Environment Selector -->
+        <div class="background-selector">
+          <span class="selector-label">بيئة وخلفية المعاينة:</span>
+          <div class="bg-options-grid">
+            <button class="bg-btn active" data-bg="range">هدف الرأس (The Range)</button>
+            <button class="bg-btn" data-bg="ascent">أسينت (Ascent)</button>
+            <button class="bg-btn" data-bg="bind">بايند (Bind)</button>
+            <button class="bg-btn" data-bg="haven">هافن (Haven)</button>
+            <button class="bg-btn" data-bg="icebox">آيس بوكس (Icebox)</button>
+            <button class="bg-btn" data-bg="dark">داكن (Dark)</button>
+            <button class="bg-btn" data-bg="light">فاتح (Light)</button>
+            <button class="bg-btn" data-bg="grid">شبكة بكسل (Grid)</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Generated Code Box -->
+      <div class="code-box-card">
+        <div class="code-box-header">
+          <span class="code-box-title">كود فالورانت الرسمي (Profile Code)</span>
+        </div>
+        <div class="code-input-group">
+          <input type="text" id="crosshairCode" class="code-input" readonly value="0;P;c;1;h;0;0t;1;0l;3;0o;2;0a;1;0f;0;1b;0">
+          <button id="copyCodeBtn" class="btn btn-primary" title="نسخ الكود">
+            📋 نسخ الكود
+          </button>
+        </div>
+
+        <!-- Additional Action Buttons -->
+        <div class="action-buttons-row">
+          <button id="testFireBtn" class="btn btn-secondary" style="flex: 1;">
+            💥 تجربة إطلاق
+          </button>
+          <button id="exportPngBtn" class="btn btn-secondary" style="flex: 1;">
+            🖼️ تصدير صورة PNG
+          </button>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- RIGHT COLUMN: Designer, Presets, and Saved Tabs -->
+    <section class="tabs-column">
+
+      <!-- Navigation Tabs -->
+      <div class="tabs-nav">
+        <button class="tab-btn active" data-tab="designerTab">
+          🎨 المصمم والتحكم
+        </button>
+        <button class="tab-btn" data-tab="presetsTab">
+          ⚡ مكتبة الجاهز
+        </button>
+        <button class="tab-btn" data-tab="savedTab">
+          💾 تصاميمي المحفوظة
+        </button>
+      </div>
+
+      <!-- ================= TAB 1: DESIGNER ================= -->
+      <div id="designerTab" class="tab-content active">
+
+        <!-- 1. Color & General Section -->
+        <div class="form-section">
+          <div class="section-header">
+            <span class="section-title">🎨 لون الكروس هير (Crosshair Color)</span>
+          </div>
+          <div class="section-body">
+            <div class="color-picker-grid">
+              <!-- White -->
+              <label class="color-option" title="أبيض">
+                <input type="radio" name="color" value="0" checked>
+                <div class="color-swatch" style="background-color: #ffffff;"></div>
+              </label>
+              <!-- Green -->
+              <label class="color-option" title="أخضر">
+                <input type="radio" name="color" value="1">
+                <div class="color-swatch" style="background-color: #00ff00;"></div>
+              </label>
+              <!-- Yellow Green -->
+              <label class="color-option" title="أخضر ليموني">
+                <input type="radio" name="color" value="2">
+                <div class="color-swatch" style="background-color: #7fff00;"></div>
+              </label>
+              <!-- Green Yellow -->
+              <label class="color-option" title="أصفر مخضر">
+                <input type="radio" name="color" value="3">
+                <div class="color-swatch" style="background-color: #dfff00;"></div>
+              </label>
+              <!-- Yellow -->
+              <label class="color-option" title="أصفر">
+                <input type="radio" name="color" value="4">
+                <div class="color-swatch" style="background-color: #ffff00;"></div>
+              </label>
+              <!-- Cyan -->
+              <label class="color-option" title="سماوي / سيان">
+                <input type="radio" name="color" value="5">
+                <div class="color-swatch" style="background-color: #00ffff;"></div>
+              </label>
+              <!-- Pink -->
+              <label class="color-option" title="وردي">
+                <input type="radio" name="color" value="6">
+                <div class="color-swatch" style="background-color: #ff00ff;"></div>
+              </label>
+              <!-- Red -->
+              <label class="color-option" title="أحمر">
+                <input type="radio" name="color" value="7">
+                <div class="color-swatch" style="background-color: #ff0000;"></div>
+              </label>
+              <!-- Custom Color -->
+              <label class="color-option" title="لون مخصص (Hex)">
+                <input type="radio" name="color" value="8" id="colorCustom">
+                <div class="color-swatch" style="background: conic-gradient(red, yellow, lime, aqua, blue, magenta, red);"></div>
+              </label>
+            </div>
+
+            <!-- Custom Color Picker Input -->
+            <div class="custom-color-row hidden">
+              <span class="control-label">اللون المخصص:</span>
+              <input type="color" id="customColorInput" class="custom-color-input" value="#00ffaa">
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Outlines & Center Dot Section -->
+        <div class="form-section">
+          <div class="section-header">
+            <span class="section-title">🔲 الخطوط الخارجية ونقطة المنتصف (Outlines & Center Dot)</span>
+          </div>
+          <div class="section-body">
+            <!-- Outlines Toggle -->
+            <div class="control-row">
+              <span class="control-label">تفعيل الخطوط الخارجية (Outlines)</span>
+              <div>
+                <label class="switch">
+                  <input type="checkbox" id="outlinesToggle" checked>
+                  <span class="slider"></span>
+                </label>
+              </div>
+              <span></span>
+            </div>
+
+            <!-- Outline Opacity -->
+            <div class="control-row">
+              <label for="outlineOpacity" class="control-label">شفافية التحديد الخارجي</label>
+              <input type="range" id="outlineOpacity" min="0" max="1" step="0.05" value="0.5">
+              <span id="outlineOpacityVal" class="control-value">0.50</span>
+            </div>
+
+            <!-- Outline Thickness -->
+            <div class="control-row">
+              <label for="outlineThickness" class="control-label">سماكة التحديد الخارجي</label>
+              <input type="range" id="outlineThickness" min="1" max="6" step="1" value="1">
+              <span id="outlineThicknessVal" class="control-value">1</span>
+            </div>
+
+            <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 0.5rem 0;">
+
+            <!-- Center Dot Toggle -->
+            <div class="control-row">
+              <span class="control-label">نقطة المنتصف (Center Dot)</span>
+              <div>
+                <label class="switch">
+                  <input type="checkbox" id="centerDotToggle">
+                  <span class="slider"></span>
+                </label>
+              </div>
+              <span></span>
+            </div>
+
+            <!-- Center Dot Opacity -->
+            <div class="control-row">
+              <label for="centerDotOpacity" class="control-label">شفافية النقطة</label>
+              <input type="range" id="centerDotOpacity" min="0" max="1" step="0.05" value="1">
+              <span id="centerDotOpacityVal" class="control-value">1.00</span>
+            </div>
+
+            <!-- Center Dot Size -->
+            <div class="control-row">
+              <label for="centerDotSize" class="control-label">حجم النقطة</label>
+              <input type="range" id="centerDotSize" min="1" max="6" step="1" value="2">
+              <span id="centerDotSizeVal" class="control-value">2</span>
+            </div>
+
+            <!-- Override Firing Error Toggle -->
+            <div class="control-row">
+              <span class="control-label">إلغاء خطأ الإطلاق بالإزاحة</span>
+              <div>
+                <label class="switch">
+                  <input type="checkbox" id="overrideFiringError">
+                  <span class="slider"></span>
+                </label>
+              </div>
+              <span></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Inner Lines Section -->
+        <div class="form-section">
+          <div class="section-header">
+            <span class="section-title">➕ الخطوط الداخلية (Inner Lines)</span>
+          </div>
+          <div class="section-body">
+            <!-- Show Inner Lines -->
+            <div class="control-row">
+              <span class="control-label">إظهار الخطوط الداخلية</span>
+              <div>
+                <label class="switch">
+                  <input type="checkbox" id="innerShowToggle" checked>
+                  <span class="slider"></span>
+                </label>
+              </div>
+              <span></span>
+            </div>
+
+            <!-- Inner Opacity -->
+            <div class="control-row">
+              <label for="innerOpacity" class="control-label">الشفافية (Opacity)</label>
+              <input type="range" id="innerOpacity" min="0" max="1" step="0.05" value="1">
+              <span id="innerOpacityVal" class="control-value">1.00</span>
+            </div>
+
+            <!-- Inner Length -->
+            <div class="control-row">
+              <label for="innerLength" class="control-label">الطول (Length)</label>
+              <input type="range" id="innerLength" min="0" max="20" step="1" value="6">
+              <span id="innerLengthVal" class="control-value">6</span>
+            </div>
+
+            <!-- Separate Lengths Toggle -->
+            <div class="control-row">
+              <span class="control-label">فصل الطول الرأسي عن الأفقي</span>
+              <div>
+                <label class="switch">
+                  <input type="checkbox" id="innerSeparateLengths">
+                  <span class="slider"></span>
+                </label>
+              </div>
+              <span></span>
+            </div>
+
+            <!-- Inner Vertical Length (if separate) -->
+            <div id="innerVerticalGroup" class="control-row hidden">
+              <label for="innerVerticalLength" class="control-label">الطول الرأسي (Vertical)</label>
+              <input type="range" id="innerVerticalLength" min="0" max="20" step="1" value="6">
+              <span id="innerVerticalLengthVal" class="control-value">6</span>
+            </div>
+
+            <!-- Inner Thickness -->
+            <div class="control-row">
+              <label for="innerThickness" class="control-label">السماكة (Thickness)</label>
+              <input type="range" id="innerThickness" min="1" max="10" step="1" value="2">
+              <span id="innerThicknessVal" class="control-value">2</span>
+            </div>
+
+            <!-- Inner Offset -->
+            <div class="control-row">
+              <label for="innerOffset" class="control-label">الإزاحة من المركز (Offset)</label>
+              <input type="range" id="innerOffset" min="0" max="20" step="1" value="3">
+              <span id="innerOffsetVal" class="control-value">3</span>
+            </div>
+
+            <!-- Inner Firing Error -->
+            <div class="control-row">
+              <span class="control-label">تأثير خطأ إطلاق النار (Firing Error)</span>
+              <div>
+                <label class="switch">
+                  <input type="checkbox" id="innerFiringError">
+                  <span class="slider"></span>
+                </label>
+              </div>
+              <span></span>
+            </div>
+
+            <!-- Inner Movement Error -->
+            <div class="control-row">
+              <span class="control-label">تأثير خطأ الحركة (Movement Error)</span>
+              <div>
+                <label class="switch">
+                  <input type="checkbox" id="innerMovementError">
+                  <span class="slider"></span>
+                </label>
+              </div>
+              <span></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. Outer Lines Section -->
+        <div class="form-section">
+          <div class="section-header">
+            <span class="section-title">✳️ الخطوط الخارجية (Outer Lines)</span>
+          </div>
+          <div class="section-body">
+            <!-- Show Outer Lines -->
+            <div class="control-row">
+              <span class="control-label">إظهار الخطوط الخارجية</span>
+              <div>
+                <label class="switch">
+                  <input type="checkbox" id="outerShowToggle">
+                  <span class="slider"></span>
+                </label>
+              </div>
+              <span></span>
+            </div>
+
+            <!-- Outer Opacity -->
+            <div class="control-row">
+              <label for="outerOpacity" class="control-label">الشفافية (Opacity)</label>
+              <input type="range" id="outerOpacity" min="0" max="1" step="0.05" value="0.35">
+              <span id="outerOpacityVal" class="control-value">0.35</span>
+            </div>
+
+            <!-- Outer Length -->
+            <div class="control-row">
+              <label for="outerLength" class="control-label">الطول (Length)</label>
+              <input type="range" id="outerLength" min="0" max="20" step="1" value="2">
+              <span id="outerLengthVal" class="control-value">2</span>
+            </div>
+
+            <!-- Separate Lengths Toggle -->
+            <div class="control-row">
+              <span class="control-label">فصل الطول الرأسي عن الأفقي</span>
+              <div>
+                <label class="switch">
+                  <input type="checkbox" id="outerSeparateLengths">
+                  <span class="slider"></span>
+                </label>
+              </div>
+              <span></span>
+            </div>
+
+            <!-- Outer Vertical Length -->
+            <div id="outerVerticalGroup" class="control-row hidden">
+              <label for="outerVerticalLength" class="control-label">الطول الرأسي (Vertical)</label>
+              <input type="range" id="outerVerticalLength" min="0" max="20" step="1" value="2">
+              <span id="outerVerticalLengthVal" class="control-value">2</span>
+            </div>
+
+            <!-- Outer Thickness -->
+            <div class="control-row">
+              <label for="outerThickness" class="control-label">السماكة (Thickness)</label>
+              <input type="range" id="outerThickness" min="1" max="10" step="1" value="2">
+              <span id="outerThicknessVal" class="control-value">2</span>
+            </div>
+
+            <!-- Outer Offset -->
+            <div class="control-row">
+              <label for="outerOffset" class="control-label">الإزاحة من المركز (Offset)</label>
+              <input type="range" id="outerOffset" min="0" max="40" step="1" value="10">
+              <span id="outerOffsetVal" class="control-value">10</span>
+            </div>
+
+            <!-- Outer Firing Error -->
+            <div class="control-row">
+              <span class="control-label">تأثير خطأ إطلاق النار (Firing Error)</span>
+              <div>
+                <label class="switch">
+                  <input type="checkbox" id="outerFiringError" checked>
+                  <span class="slider"></span>
+                </label>
+              </div>
+              <span></span>
+            </div>
+
+            <!-- Outer Movement Error -->
+            <div class="control-row">
+              <span class="control-label">تأثير خطأ الحركة (Movement Error)</span>
+              <div>
+                <label class="switch">
+                  <input type="checkbox" id="outerMovementError" checked>
+                  <span class="slider"></span>
+                </label>
+              </div>
+              <span></span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ================= TAB 2: PRESETS ================= -->
+      <div id="presetsTab" class="tab-content">
+        <div class="presets-toolbar">
+          <input type="text" id="presetSearchInput" class="preset-search" placeholder="🔍 ابحث بالاسم، الفريق، أو النوع (TenZ, Aspas, Dot, Heart...)...">
+          <div class="preset-categories">
+            <button class="preset-cat-btn active" data-category="all">🌟 الكل (All)</button>
+            <button class="preset-cat-btn" data-category="pros">🏆 اللاعبين المحترفين (Pros)</button>
+            <button class="preset-cat-btn" data-category="shapes">📐 أشكال هندسية (Shapes)</button>
+            <button class="preset-cat-btn" data-category="fun">🎉 أشكال مرحة (Fun & Troll)</button>
+          </div>
+        </div>
+
+        <div id="presetsGrid" class="presets-grid">
+          <!-- Populated by JavaScript -->
+        </div>
+      </div>
+
+      <!-- ================= TAB 3: SAVED ================= -->
+      <div id="savedTab" class="tab-content">
+        <!-- Save New Form -->
+        <div class="save-form-card">
+          <input type="text" id="saveNameInput" class="save-name-input" placeholder="اكتب اسم للتصميم الحالي (مثلاً: كروسي المفضل 1)...">
+          <button id="saveCrosshairBtn" class="btn btn-primary">
+            💾 حفظ التصميم الحالي
+          </button>
+        </div>
+
+        <div id="noSavedMsg" class="empty-state">
+          لم تقم بحفظ أي تصميم بعد. صمم كروس هير واضغط على "حفظ التصميم الحالي" لحفظه في متصفحك والرجوع إليه دائماً!
+        </div>
+
+        <div id="savedGrid" class="presets-grid">
+          <!-- Populated by JavaScript -->
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Import Code Modal -->
+  <div id="importModal" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2>📥 استيراد كود كروس هير من فالورانت</h2>
+      </div>
+      <p style="font-size: 0.85rem; color: var(--text-secondary);">
+        انسخ كود الكروس هير من داخل لعبة فالورانت والصقه في المربع بالأسفل:
+      </p>
+      <textarea id="importInput" class="modal-textarea" placeholder="مثال: 0;s;1;P;c;5;h;0;m;0;0t;1;0l;4;0v;4;0o;2;0a;1;0f;0;1b;0"></textarea>
+      <div class="modal-actions">
+        <button id="cancelImportBtn" class="btn btn-secondary">إلغاء</button>
+        <button id="confirmImportBtn" class="btn btn-primary">تحليل واستيراد الكود</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast">✓ تم نسخ الكود بنجاح</div>
+
+  <!-- Scripts -->
+  <script src="js/parser.js"></script>
+  <script src="js/presets.js"></script>
+  <script src="js/renderer.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
